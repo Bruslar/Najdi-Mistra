@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Najdi mistra · funkční filtrování</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+        body {
+            background-color: #f5f7fb;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .header {
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #eaeef2;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-icon {
+            background: #0b3b5c;
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 6px 10px rgba(11,59,92,0.15);
+        }
+        .logo h1 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            color: #1e2f4e;
+        }
+        .logo span {
+            color: #d94e2b;
+            font-weight: 400;
+        }
+        .main-layout {
+            display: flex;
+            flex: 1;
+            padding: 2rem 2rem 1.5rem 2rem;
+            gap: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .filter-sidebar {
+            flex: 0 0 280px;
+            background: white;
+            border-radius: 28px;
+            padding: 1.8rem 1.5rem;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+            height: fit-content;
+            border: 1px solid #eef2f6;
+        }
+        .filter-sidebar h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1b2b40;
+            margin-bottom: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .filter-group {
+            margin-bottom: 2rem;
+        }
+        .filter-group h4 {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #5e6f88;
+            margin-bottom: 1rem;
+        }
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            color: #2c3d55;
+            cursor: pointer;
+        }
+        .filter-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #d94e2b;
+            cursor: pointer;
+        }
+        .star-rating-filter {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #f5b342;
+        }
+        .price-inputs {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .price-inputs input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #d0dae8;
+            border-radius: 16px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .search-bar {
+            background: white;
+            border-radius: 60px;
+            padding: 0.3rem 0.3rem 0.3rem 1.5rem;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.03);
+            border: 1px solid #e4eaf2;
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+        .search-bar i {
+            color: #8a9bb5;
+            font-size: 1.2rem;
+        }
+        .search-bar input {
+            border: none;
+            padding: 1rem 0.8rem;
+            font-size: 1.1rem;
+            width: 100%;
+            background: transparent;
+            outline: none;
+            color: #1f2e46;
+        }
+        .search-bar button {
+            background: #0b3b5c;
+            border: none;
+            color: white;
+            padding: 0.9rem 2.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+            margin-left: 8px;
+        }
+        .search-bar button:hover {
+            background: #145a82;
+        }
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .results-header p {
+            color: #3b4e66;
+            font-weight: 500;
+            background: white;
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .sort-badge {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background: white;
+            padding: 0.3rem 1rem 0.3rem 1.5rem;
+            border-radius: 30px;
+        }
+        .sort-badge span {
+            color: #4f658a;
+        }
+        .sort-badge select {
+            border: none;
+            background: transparent;
+            font-weight: 600;
+            color: #0b3b5c;
+            outline: none;
+        }
+        .worker-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.8rem;
+        }
+        .worker-card {
+            background: white;
+            border-radius: 28px;
+            padding: 1.8rem 1.2rem 1.4rem 1.2rem;
+            box-shadow: 0 12px 26px rgba(0,0,0,0.04);
+            transition: transform 0.15s ease, box-shadow 0.2s;
+            border: 1px solid #edf2f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .worker-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 22px 35px rgba(0,0,0,0.07);
+            border-color: #dce5f0;
+        }
+        .worker-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(145deg, #eaeef5, #ffffff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.8rem;
+            font-weight: 300;
+            color: #1f3b4e;
+            margin-bottom: 1rem;
+            border: 3px solid white;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.04);
+        }
+        .worker-card h4 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #0b2c44;
+            margin-bottom: 4px;
+        }
+        .worker-title {
+            color: #d94e2b;
+            font-weight: 500;
+            font-size: 1rem;
+            margin-bottom: 12px;
+            background: #fef0ea;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+        }
+        .worker-rating {
+            color: #f8b84a;
+            font-size: 1rem;
+            margin-bottom: 12px;
+            background: #fef7e9;
+            padding: 0.2rem 1rem;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .worker-rating span {
+            color: #4f5e74;
+            font-weight: 600;
+            margin-left: 4px;
+        }
+        .worker-specialty {
+            font-size: 0.95rem;
+            color: #2f4562;
+            margin: 8px 0;
+        }
+        .worker-price {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #0b3b5c;
+            margin: 12px 0 8px 0;
+        }
+        .worker-price small {
+            font-weight: 400;
+            font-size: 0.8rem;
+            color: #7e92ab;
+        }
+        .btn-contact {
+            background: white;
+            border: 2px solid #0b3b5c;
+            color: #0b3b5c;
+            padding: 0.6rem 2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            margin-top: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-contact:hover {
+            background: #0b3b5c;
+            color: white;
+        }
+        .footer-note {
+            text-align: center;
+            color: #9aabbc;
+            font-size: 0.9rem;
+            margin-top: 2.5rem;
+            padding: 1rem;
+            border-top: 1px solid #e2eaf1;
+        }
+        @media (max-width: 850px) {
+            .main-layout {
+                flex-direction: column;
+                padding: 1.5rem;
+            }
+            .filter-sidebar {
+                flex: auto;
+                width: 100%;
+            }
+        }
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 40px;
+            color: #5e6f88;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon"><i class="fas fa-hammer"></i></div>
+            <h1>najdi<span>mistra</span></h1>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <!-- LEVÝ PANEL FILTRY (plně propojené) -->
+        <aside class="filter-sidebar" id="filterSidebar">
+            <h3><i class="fas fa-sliders-h" style="color:#d94e2b;"></i> Filtry</h3>
+            
+            <div class="filter-group">
+                <h4>🔨 Řemeslo</h4>
+                <div class="filter-option"><input type="checkbox" id="filtr-zid" value="zedník" checked><label for="filtr-zid">Zedník</label></div>
+                <div class="filter-option"><input type="checkbox" id="filtr-elek" value="elektrikář" checked><label for="filtr-elek">Elektrikář</label></div>
+                <div class="filter-option"><input type="checkbox" id="filtr-inst" value="instalatér" checked><label for="filtr-inst">Instalatér</label></div>
+                <div class="filter-option"><input type="checkbox" id="filtr-mal" value="malíř" checked><label for="filtr-mal">Malíř</label></div>
+                <div class="filter-option"><input type="checkbox" id="filtr-truh" value="truhlář" checked><label for="filtr-truh">Truhlář</label></div>
+            </div>
+
+            <div class="filter-group">
+                <h4>⭐ Hodnocení</h4>
+                <div class="filter-option"><input type="checkbox" id="star-5" data-rating="5" checked><label for="star-5" class="star-rating-filter"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> (5)</label></div>
+                <div class="filter-option"><input type="checkbox" id="star-4" data-rating="4" checked><label for="star-4" class="star-rating-filter"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> (4 a více)</label></div>
+                <div class="filter-option"><input type="checkbox" id="star-3" data-rating="3"><label for="star-3" class="star-rating-filter"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> (3 a více)</label></div>
+            </div>
+
+            <div class="filter-group">
+                <h4>💰 Cena za hodinu (Kč)</h4>
+                <div class="price-inputs">
+                    <input type="number" id="price-min" value="300" min="0" step="50" placeholder="min">
+                    <span>—</span>
+                    <input type="number" id="price-max" value="1500" min="300" step="50" placeholder="max">
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h4>📍 Lokalita</h4>
+                <div class="filter-option"><input type="checkbox" id="praha" value="Praha" checked><label for="praha">Praha</label></div>
+                <div class="filter-option"><input type="checkbox" id="brno" value="Brno" checked><label for="brno">Brno</label></div>
+                <div class="filter-option"><input type="checkbox" id="ostrava" value="Ostrava"><label for="ostrava">Ostrava</label></div>
+                <div class="filter-option"><input type="checkbox" id="plzen" value="Plzeň"><label for="plzen">Plzeň</label></div>
+                <!-- pro ostatní města necháme možnost "Jinde" ale data obsahují více měst, proto přidáme filtr "další" – zjednodušíme: města která nejsou Praha,Brno,Ostrava,Plzeň se skryjí pokud není filtr "Jiné" -->
+                <div class="filter-option"><input type="checkbox" id="jine" value="other"><label for="jine">Jiná lokalita</label></div>
+            </div>
+            <p style="color:#9aafc4; font-size:0.85rem; margin-top: 30px;" id="activeFilterCount"><i class="far fa-check-circle"></i> aktivní filtry: <span>8</span></p>
+        </aside>
+
+        <!-- PRAVÝ PANEL -->
+        <div class="right-panel">
+            <!-- VYHLEDÁVÁNÍ (funkční) -->
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Hledat jméno, řemeslo nebo specialty...">
+                <button id="searchBtn"><i class="fas fa-arrow-right" style="margin-right: 8px;"></i>Hledat</button>
+            </div>
+
+            <div class="results-header">
+                <p id="resultCount"><i class="fas fa-hard-hat"></i> 12 dostupných mistrů</p>
+                <div class="sort-badge">
+                    <span><i class="far fa-clock"></i> řadit:</span>
+                    <select id="sortSelect">
+                        <option value="rating">podle hodnocení</option>
+                        <option value="priceAsc">nejnižší cena</option>
+                        <option value="priceDesc">nejvyšší cena</option>
+                        <option value="name">jméno A-Z</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- MŘÍŽKA S ŘEMESLNÍKY (dynamická) -->
+            <div class="worker-grid" id="workerGrid"></div>
+        </div>
+    </div>
+
+    <div class="footer-note">© 2025 najdi mistra · každý řemeslník prověřený</div>
+
+    <script>
+        (function() {
+            // KOMPLETNÍ DATABÁZE ŘEMESLNÍKŮ
+            const workersData = [
+                { name: "Jiří Novák", title: "zedník", specialty: "obklady, příčky", rating: 4.9, price: 590, location: "Praha", cityGroup: "Praha" },
+                { name: "Elena Horáková", title: "elektrikářka", specialty: "revize, rozvody", rating: 5.0, price: 680, location: "Brno", cityGroup: "Brno" },
+                { name: "Marek Vokál", title: "instalatér", specialty: "voda, topení", rating: 4.7, price: 620, location: "Ostrava", cityGroup: "Ostrava" },
+                { name: "Klára Malinová", title: "malířka", specialty: "tapety, dekorativní", rating: 4.8, price: 530, location: "Plzeň", cityGroup: "Plzeň" },
+                { name: "Tomáš Dřevěný", title: "truhlář", specialty: "nábytek na míru", rating: 4.9, price: 720, location: "Praha", cityGroup: "Praha" },
+                { name: "Ivan Záruba", title: "zedník", specialty: "zdivo, omítky", rating: 4.5, price: 550, location: "Brno", cityGroup: "Brno" },
+                { name: "Zuzana Světlá", title: "elektrikářka", specialty: "světelné instalace", rating: 4.9, price: 640, location: "České Budějovice", cityGroup: "other" },
+                { name: "Pavel Kaprica", title: "instalatér", specialty: "koupelny, plyn", rating: 4.6, price: 670, location: "Praha", cityGroup: "Praha" },
+                { name: "Roman Štětec", title: "malíř", specialty: "lakování, fasády", rating: 4.7, price: 510, location: "Liberec", cityGroup: "other" },
+                { name: "David Hobl", title: "truhlář", specialty: "okna, dveře", rating: 4.8, price: 690, location: "Hradec Králové", cityGroup: "other" },
+                { name: "Simona Kovářová", title: "instalatérka", specialty: "rekonstrukce", rating: 4.9, price: 700, location: "Olomouc", cityGroup: "other" },
+                { name: "Ondřej Kámen", title: "zedník", specialty: "základy, komíny", rating: 4.4, price: 600, location: "Ústí nad Labem", cityGroup: "other" },
+                { name: "Lucie Svobodová", title: "malířka", specialty: "interiéry, štuky", rating: 4.8, price: 590, location: "Brno", cityGroup: "Brno" },
+                { name: "Martin Krbek", title: "elektrikář", specialty: "domovní instalace", rating: 4.3, price: 620, location: "Ostrava", cityGroup: "Ostrava" }
+            ];
+
+            // reference na DOM
+            const grid = document.getElementById('workerGrid');
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const sortSelect = document.getElementById('sortSelect');
+            const resultCountSpan = document.getElementById('resultCount');
+            const activeFilterSpan = document.querySelector('#activeFilterCount span');
+
+            // filtry
+            const craftCheckboxes = {
+                zedník: document.getElementById('filtr-zid'),
+                elektrikář: document.getElementById('filtr-elek'),
+                instalatér: document.getElementById('filtr-inst'),
+                malíř: document.getElementById('filtr-mal'),
+                truhlář: document.getElementById('filtr-truh')
+            };
+            const ratingCheckboxes = {
+                star5: document.getElementById('star-5'),
+                star4: document.getElementById('star-4'),
+                star3: document.getElementById('star-3')
+            };
+            const priceMin = document.getElementById('price-min');
+            const priceMax = document.getElementById('price-max');
+            const locationCheckboxes = {
+                Praha: document.getElementById('praha'),
+                Brno: document.getElementById('brno'),
+                Ostrava: document.getElementById('ostrava'),
+                Plzeň: document.getElementById('plzen'),
+                other: document.getElementById('jine')
+            };
+
+            // pomocná funkce pro získání aktivních řemesel
+            function getSelectedCrafts() {
+                return Object.keys(craftCheckboxes).filter(craft => craftCheckboxes[craft].checked);
+            }
+
+            function getSelectedLocations() {
+                let locs = [];
+                if (locationCheckboxes.Praha.checked) locs.push('Praha');
+                if (locationCheckboxes.Brno.checked) locs.push('Brno');
+                if (locationCheckboxes.Ostrava.checked) locs.push('Ostrava');
+                if (locationCheckboxes.Plzeň.checked) locs.push('Plzeň');
+                if (locationCheckboxes.other.checked) locs.push('other');
+                return locs;
+            }
+
+            function getMinRating() {
+                if (ratingCheckboxes.star5.checked) return 5.0;
+                if (ratingCheckboxes.star4.checked) return 4.0;
+                if (ratingCheckboxes.star3.checked) return 3.0;
+                return 0; // pokud nic nevybráno, vracíme 0 (ale defaultně vše)
+            }
+
+            // aktualizace počtu aktivních filtrů (jen vizuální)
+            function updateActiveFilterCount() {
+                let count = 0;
+                // craft checked
+                count += Object.values(craftCheckboxes).filter(cb => cb.checked).length;
+                // rating (bereme jako jeden? pro zjednodušení počítáme každé zaškrtnuté, ale reálně působí jako jeden filtr (nejpřísnější), ale pro count: 3 max)
+                count += [ratingCheckboxes.star5, ratingCheckboxes.star4, ratingCheckboxes.star3].filter(cb => cb.checked).length;
+                // cena (vždy nějaká je, ale pro zajímavost pokud je min>300 nebo max<1500 nebo oba, bereme jako 1 filtr)
+                if (parseInt(priceMin.value) > 300 || parseInt(priceMax.value) < 1500) count += 1;
+                // lokace
+                count += Object.values(locationCheckboxes).filter(cb => cb.checked).length;
+                activeFilterSpan.textContent = count;
+            }
+
+            // HLAVNÍ FILTRAČNÍ FUNKCE
+            function filterWorkers() {
+                const selectedCrafts = getSelectedCrafts();
+                const selectedLocs = getSelectedLocations();
+                const minRating = getMinRating();
+                const minP = parseInt(priceMin.value) || 0;
+                const maxP = parseInt(priceMax.value) || 99999;
+                const searchTerm = searchInput.value.trim().toLowerCase();
+
+                let filtered = workersData.filter(w => {
+                    // řemeslo (title bez diakritiky? porovnáme přesně)
+                    const craftMatch = selectedCrafts.includes(w.title.toLowerCase().replace('ka','')) || 
+                                       // ošetření koncovek - elektrikář/ka apod.
+                                       selectedCrafts.some(c => w.title.includes(c)); // jednoduché, pro ukázku stačí
+                    if (!craftMatch) return false;
+
+                    // lokalita
+                    const locMatch = selectedLocs.includes(w.cityGroup);
+                    if (!locMatch) return false;
+
+                    // hodnocení
+                    if (w.rating < minRating) return false;
+
+                    // cena
+                    if (w.price < minP || w.price > maxP) return false;
+
+                    // textové vyhledávání
+                    if (searchTerm !== '') {
+                        const haystack = (w.name + ' ' + w.title + ' ' + w.specialty + ' ' + w.location).toLowerCase();
+                        return haystack.includes(searchTerm);
+                    }
+                    return true;
+                });
+
+                // řazení
+                const sortBy = sortSelect.value;
+                if (sortBy === 'rating') {
+                    filtered.sort((a, b) => b.rating - a.rating);
+                } else if (sortBy === 'priceAsc') {
+                    filtered.sort((a, b) => a.price - b.price);
+                } else if (sortBy === 'priceDesc') {
+                    filtered.sort((a, b) => b.price - a.price);
+                } else if (sortBy === 'name') {
+                    filtered.sort((a, b) => a.name.localeCompare(b.name));
+                }
+
+                renderWorkers(filtered);
+                resultCountSpan.innerHTML = `<i class="fas fa-hard-hat"></i> ${filtered.length} dostupných mistrů`;
+                updateActiveFilterCount();
+            }
+
+            // VYKRESLENÍ KARET
+            function renderWorkers(workers) {
+                if (workers.length === 0) {
+                    grid.innerHTML = `<div class="no-results"><i class="fas fa-frown" style="font-size:3rem; opacity:0.5; margin-bottom:1rem; display:block;"></i>Žádný řemeslník nesplňuje zadané filtry.</div>`;
+                    return;
+                }
+
+                let html = '';
+                workers.forEach(w => {
+                    const fullStars = Math.floor(w.rating);
+                    const hasHalf = (w.rating - fullStars) >= 0.5 ? 1 : 0;
+                    let stars = '';
+                    for (let i = 0; i < fullStars; i++) stars += '<i class="fas fa-star"></i>';
+                    if (hasHalf) stars += '<i class="fas fa-star-half-alt"></i>';
+                    const empty = 5 - fullStars - hasHalf;
+                    for (let i = 0; i < empty; i++) stars += '<i class="far fa-star"></i>';
+
+                    // počáteční jména
+                    const initial = w.name.split(' ').map(n => n[0]).join('').substring(0,2);
+
+                    html += `
+                        <div class="worker-card">
+                            <div class="worker-avatar">${initial}</div>
+                            <h4>${w.name}</h4>
+                            <div class="worker-title">${w.title}</div>
+                            <div class="worker-rating">${stars} <span>${w.rating.toFixed(1)}</span></div>
+                            <div class="worker-specialty"><i class="fas fa-tools"></i> ${w.specialty}</div>
+                            <div class="worker-price">${w.price} Kč <small>/ hod</small></div>
+                            <div style="margin: 6px 0 4px; color:#6e85a3;"><i class="fas fa-map-marker-alt" style="color:#d94e2b;"></i> ${w.location}</div>
+                            <button class="btn-contact">kontaktovat</button>
+                        </div>
+                    `;
+                });
+                grid.innerHTML = html;
+            }
+
+            // naslouchání změnám na filtrech
+            function bindFilters() {
+                const allFilters = [
+                    ...Object.values(craftCheckboxes),
+                    ...Object.values(ratingCheckboxes),
+                    ...Object.values(locationCheckboxes),
+                    priceMin, priceMax, searchInput, sortSelect
+                ];
+                allFilters.forEach(el => {
+                    if (el) {
+                        el.addEventListener('input', filterWorkers);
+                        el.addEventListener('change', filterWorkers);
+                    }
+                });
+                searchBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    filterWorkers();
+                });
+                searchInput.addEventListener('keyup', (e) => {
+                    if (e.key === 'Enter') filterWorkers();
+                });
+            }
+
+            // inicializace – zobraz vše
+            renderWorkers(workersData);
+            bindFilters();
+            updateActiveFilterCount();
+
+            // pro jistotu synchronizace min/max ceny
+            priceMin.addEventListener('change', function() {
+                if (parseInt(priceMin.value) < 0) priceMin.value = 0;
+                if (parseInt(priceMin.value) > parseInt(priceMax.value)) priceMax.value = priceMin.value;
+                filterWorkers();
+            });
+            priceMax.addEventListener('change', function() {
+                if (parseInt(priceMax.value) > 2000) priceMax.value = 2000;
+                if (parseInt(priceMax.value) < parseInt(priceMin.value)) priceMin.value = priceMax.value;
+                filterWorkers();
+            });
+        })();
+    </script>
+</body>
+</html>

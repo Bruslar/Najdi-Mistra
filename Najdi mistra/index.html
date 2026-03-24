@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>najdi mistra · najděte nejlepší řemeslníky ve vašem okolí</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- navigace -->
+    <nav class="navbar">
+        <div class="logo">
+            <div class="logo-icon"><i class="fas fa-hammer"></i></div>
+            <h2>najdi<span>mistra</span></h2>
+        </div>
+        <div class="nav-links">
+            <a href="#">Jak to funguje</a>
+            <a href="#">Recenze</a>
+            <a href="search/search.html" class="btn-outline">Najít mistra</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero sekce -->
+        <div class="container">
+            <div class="hero">
+                <div class="hero-content">
+                    <div class="hero-badge"><i class="fas fa-star"></i> Důvěřuje 15 000+ zákazníků</div>
+                    <h1>Profesionální řemeslníci<br> <span>na jedno kliknutí</span></h1>
+                    <p class="hero-desc">Najděte ověřené zedníky, elektrikáře, instalatéry a další specialisty ve vašem okolí. Bez starostí, s garancí kvality.</p>
+                    <a href="search/search.html" class="btn-primary btn-large" ><i class="fas fa-search"></i> Hledat mistra</a>
+                    <div class="hero-stats">
+                        <div class="stat"><span class="stat-number">1 200+</span><span class="stat-label">řemeslníků</span></div>
+                        <div class="stat"><span class="stat-number">98%</span><span class="stat-label">spokojenost</span></div>
+                        <div class="stat"><span class="stat-number">24h</span><span class="stat-label">průměrná odezva</span></div>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="hero-illustration">
+                        <div class="ill-icon"><i class="fas fa-hard-hat"></i></div>
+                        <div class="ill-icon"><i class="fas fa-tools"></i></div>
+                        <div class="ill-icon"><i class="fas fa-wrench"></i></div>
+                        <div class="ill-icon"><i class="fas fa-paint-roller"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RYCHLÉ VYHLEDÁVÁNÍ - ukázka funkčního inputu -->
+        <div class="container">
+            <div class="search-section">
+                <h2>Začněte hledat hned teď</h2>
+                <p>Zadejte, jakého mistra potřebujete – například "elektrikář Praha" nebo "instalatér"</p>
+                <div class="search-box-large">
+                    <input type="text" id="landingSearchInput" placeholder="🔨 Např. malíř, zedník, truhlář...">
+                    <button id="landingSearchBtn">Vyhledat →</button>
+                </div>
+                <p style="margin-top: 1.2rem; font-size: 0.85rem; color:#7890a8;"><i class="fas fa-shield-alt"></i> Všichni řemeslníci jsou ověření a hodnocení zákazníky</p>
+            </div>
+        </div>
+
+        <!-- Oblíbené kategorie -->
+        <div class="container categories">
+            <h2 class="section-title">Vyberte podle řemesla</h2>
+            <div class="category-grid" id="categoryGrid">
+                <div class="category-card" data-craft="zedník">
+                    <i class="fas fa-hard-hat"></i>
+                    <h4>Zedník</h4>
+                    <p style="font-size: 0.8rem;">zdivo, omítky, příčky</p>
+                </div>
+                <div class="category-card" data-craft="elektrikář">
+                    <i class="fas fa-bolt"></i>
+                    <h4>Elektrikář</h4>
+                    <p style="font-size: 0.8rem;">revize, rozvody</p>
+                </div>
+                <div class="category-card" data-craft="instalatér">
+                    <i class="fas fa-water"></i>
+                    <h4>Instalatér</h4>
+                    <p style="font-size: 0.8rem;">voda, topení, plyn</p>
+                </div>
+                <div class="category-card" data-craft="malíř">
+                    <i class="fas fa-paint-roller"></i>
+                    <h4>Malíř</h4>
+                    <p style="font-size: 0.8rem;">interiéry, fasády</p>
+                </div>
+                <div class="category-card" data-craft="truhlář">
+                    <i class="fas fa-couch"></i>
+                    <h4>Truhlář</h4>
+                    <p style="font-size: 0.8rem;">nábytek na míru</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Jak to funguje -->
+        <div class="container steps">
+            <h2 class="section-title">Jak najdete správného mistra</h2>
+            <div class="steps-grid">
+                <div class="step"><div class="step-circle">1</div><h4>Popište zakázku</h4><p>Zadejte, co potřebujete opravit nebo postavit.</p></div>
+                <div class="step"><div class="step-circle">2</div><h4>Porovnejte nabídky</h4><p>Dostanete cenové nabídky od ověřených profesionálů.</p></div>
+                <div class="step"><div class="step-circle">3</div><h4>Vyberte si</h4><p>Podívejte se na hodnocení a vyberte toho pravého.</p></div>
+                <div class="step"><div class="step-circle">4</div><h4>Hotovo</h4><p>Mistr dorazí, práce je odvedena na 100%.</p></div>
+            </div>
+        </div>
+
+        <!-- Reference -->
+        <div class="container testimonials">
+            <h2 class="section-title">Co říkají naši zákazníci</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="testimonial-text">"Během jednoho dne jsem našel skvělého elektrikáře, který mi opravil staré rozvody. Profesionální přístup a férová cena."</p>
+                    <p class="user">— Petr N., Praha</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="testimonial-text">"Skvělá platforma. Zadala jsem poptávku na malíře a do hodiny mi volali tři mistři. Kvalita provedení výborná."</p>
+                    <p class="user">— Marcela K., Brno</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+                    <p class="testimonial-text">"Díky najdi mistra jsem konečně našel spolehlivého instalatéra. Doporučuji všem, kdo nechtějí ztrácet čas."</p>
+                    <p class="user">— Jiří H., Ostrava</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA banner -->
+        <div class="container">
+            <div class="cta-banner">
+                <h3>Připojte se k tisícům spokojených domácností</h3>
+                <p style="margin-bottom: 1rem;">Najděte ověřeného mistra během pár minut. Zdarma a bez závazků.</p>
+                <a href="search/search.html" class="btn-primary">Začít hledat →</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-col"><h4>Najdi mistra</h4><p>Nejjednodušší cesta k řemeslníkům</p></div>
+            <div class="footer-col"><h4>Rychlé odkazy</h4><a href="#">Seznam řemeslníků</a><a href="#">Přidat firmu</a><a href="#">Nápověda</a></div>
+            <div class="footer-col"><h4>Kontakt</h4><a href="#">info@najdimistra.cz</a><a href="#">+420 777 123 456</a></div>
+            <div class="footer-col"><h4>Sledujte nás</h4><a href="#"><i class="fab fa-facebook"></i> Facebook</a><a href="#"><i class="fab fa-instagram"></i> Instagram</a></div>
+        </div>
+        <div style="text-align: center; margin-top: 2rem;">© 2025 najdi mistra — všechny služby jsou ověřené</div>
+    </footer>
+    <script src="main.js"></script>
+</body>
+</html>
