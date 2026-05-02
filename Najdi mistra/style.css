@@ -27,13 +27,12 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 1.25rem 2rem;
-    background: #ffffff;
+    background: #d0f6ff;
     border-bottom: 1px solid #eef2f8;
     position: sticky;
     top: 0;
     z-index: 100;
     backdrop-filter: blur(8px);
-    background: rgba(255,255,255,0.96);
 }
 
 .logo {
@@ -81,7 +80,7 @@ body {
 }
 
 .nav-links a:hover {
-    color: #d94e2b;
+    color: #d9452b;
 }
 
 .btn-outline {

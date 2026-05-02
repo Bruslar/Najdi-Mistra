@@ -31,6 +31,11 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .logo:hover {
+            opacity: 0.8;
         }
         .logo-icon {
             background: #0b3b5c;
@@ -332,14 +337,14 @@
 </head>
 <body>
     <header class="header">
-        <div class="logo">
+        <a href="/index.html" class="logo" style="text-decoration: none;">
             <div class="logo-icon"><i class="fas fa-hammer"></i></div>
             <h1>najdi<span>mistra</span></h1>
-        </div>
+        </a>
     </header>
 
     <div class="main-layout">
-        <!-- LEVÝ PANEL FILTRY (plně propojené) -->
+        <!-- LEVÝ PANEL FILTRY -->
         <aside class="filter-sidebar" id="filterSidebar">
             <h3><i class="fas fa-sliders-h" style="color:#d94e2b;"></i> Filtry</h3>
             
@@ -350,13 +355,6 @@
                 <div class="filter-option"><input type="checkbox" id="filtr-inst" value="instalatér" checked><label for="filtr-inst">Instalatér</label></div>
                 <div class="filter-option"><input type="checkbox" id="filtr-mal" value="malíř" checked><label for="filtr-mal">Malíř</label></div>
                 <div class="filter-option"><input type="checkbox" id="filtr-truh" value="truhlář" checked><label for="filtr-truh">Truhlář</label></div>
-            </div>
-
-            <div class="filter-group">
-                <h4>⭐ Hodnocení</h4>
-                <div class="filter-option"><input type="checkbox" id="star-5" data-rating="5" checked><label for="star-5" class="star-rating-filter"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> (5)</label></div>
-                <div class="filter-option"><input type="checkbox" id="star-4" data-rating="4" checked><label for="star-4" class="star-rating-filter"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> (4 a více)</label></div>
-                <div class="filter-option"><input type="checkbox" id="star-3" data-rating="3"><label for="star-3" class="star-rating-filter"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> (3 a více)</label></div>
             </div>
 
             <div class="filter-group">
@@ -374,7 +372,6 @@
                 <div class="filter-option"><input type="checkbox" id="brno" value="Brno" checked><label for="brno">Brno</label></div>
                 <div class="filter-option"><input type="checkbox" id="ostrava" value="Ostrava"><label for="ostrava">Ostrava</label></div>
                 <div class="filter-option"><input type="checkbox" id="plzen" value="Plzeň"><label for="plzen">Plzeň</label></div>
-                <!-- pro ostatní města necháme možnost "Jinde" ale data obsahují více měst, proto přidáme filtr "další" – zjednodušíme: města která nejsou Praha,Brno,Ostrava,Plzeň se skryjí pokud není filtr "Jiné" -->
                 <div class="filter-option"><input type="checkbox" id="jine" value="other"><label for="jine">Jiná lokalita</label></div>
             </div>
             <p style="color:#9aafc4; font-size:0.85rem; margin-top: 30px;" id="activeFilterCount"><i class="far fa-check-circle"></i> aktivní filtry: <span>8</span></p>
@@ -382,7 +379,7 @@
 
         <!-- PRAVÝ PANEL -->
         <div class="right-panel">
-            <!-- VYHLEDÁVÁNÍ (funkční) -->
+            <!-- VYHLEDÁVÁNÍ -->
             <div class="search-bar">
                 <i class="fas fa-search"></i>
                 <input type="text" id="searchInput" placeholder="Hledat jméno, řemeslo nebo specialty...">
@@ -402,7 +399,7 @@
                 </div>
             </div>
 
-            <!-- MŘÍŽKA S ŘEMESLNÍKY (dynamická) -->
+            <!-- MŘÍŽKA S ŘEMESLNÍKY -->
             <div class="worker-grid" id="workerGrid"></div>
         </div>
     </div>
@@ -437,6 +434,15 @@
             const resultCountSpan = document.getElementById('resultCount');
             const activeFilterSpan = document.querySelector('#activeFilterCount span');
 
+            // Mapování názvů řemesel na jejich základní formy pro porovnání
+            const craftMapping = {
+                'zedník': ['zedník'],
+                'elektrikář': ['elektrikář', 'elektrikářka'],
+                'instalatér': ['instalatér', 'instalatérka'],
+                'malíř': ['malíř', 'malířka'],
+                'truhlář': ['truhlář']
+            };
+
             // filtry
             const craftCheckboxes = {
                 zedník: document.getElementById('filtr-zid'),
@@ -462,7 +468,13 @@
 
             // pomocná funkce pro získání aktivních řemesel
             function getSelectedCrafts() {
-                return Object.keys(craftCheckboxes).filter(craft => craftCheckboxes[craft].checked);
+                const selectedCrafts = [];
+                for (const [craft, checkbox] of Object.entries(craftCheckboxes)) {
+                    if (checkbox.checked) {
+                        selectedCrafts.push(...craftMapping[craft]);
+                    }
+                }
+                return selectedCrafts;
             }
 
             function getSelectedLocations() {
@@ -476,22 +488,20 @@
             }
 
             function getMinRating() {
-                if (ratingCheckboxes.star5.checked) return 5.0;
-                if (ratingCheckboxes.star4.checked) return 4.0;
-                if (ratingCheckboxes.star3.checked) return 3.0;
-                return 0; // pokud nic nevybráno, vracíme 0 (ale defaultně vše)
+                // Vrací minimální hodnocení podle zaškrtnutých filtrů
+                // Pokud je zaškrtnuto 5, musí být hodnocení >= 5.0
+                // Pokud je zaškrtnuto 4, musí být hodnocení >= 4.0
+                // Pokud je zaškrtnuto 3, musí být hodnocení >= 3.0
+                // Pokud není zaškrtnuto nic, vrátí 0 (zobrazí vše)
+                return 0;
             }
 
-            // aktualizace počtu aktivních filtrů (jen vizuální)
+            // aktualizace počtu aktivních filtrů
             function updateActiveFilterCount() {
                 let count = 0;
-                // craft checked
                 count += Object.values(craftCheckboxes).filter(cb => cb.checked).length;
-                // rating (bereme jako jeden? pro zjednodušení počítáme každé zaškrtnuté, ale reálně působí jako jeden filtr (nejpřísnější), ale pro count: 3 max)
                 count += [ratingCheckboxes.star5, ratingCheckboxes.star4, ratingCheckboxes.star3].filter(cb => cb.checked).length;
-                // cena (vždy nějaká je, ale pro zajímavost pokud je min>300 nebo max<1500 nebo oba, bereme jako 1 filtr)
                 if (parseInt(priceMin.value) > 300 || parseInt(priceMax.value) < 1500) count += 1;
-                // lokace
                 count += Object.values(locationCheckboxes).filter(cb => cb.checked).length;
                 activeFilterSpan.textContent = count;
             }
@@ -506,14 +516,12 @@
                 const searchTerm = searchInput.value.trim().toLowerCase();
 
                 let filtered = workersData.filter(w => {
-                    // řemeslo (title bez diakritiky? porovnáme přesně)
-                    const craftMatch = selectedCrafts.includes(w.title.toLowerCase().replace('ka','')) || 
-                                       // ošetření koncovek - elektrikář/ka apod.
-                                       selectedCrafts.some(c => w.title.includes(c)); // jednoduché, pro ukázku stačí
+                    // řemeslo - opravená logika
+                    const craftMatch = selectedCrafts.length === 0 || selectedCrafts.includes(w.title);
                     if (!craftMatch) return false;
 
                     // lokalita
-                    const locMatch = selectedLocs.includes(w.cityGroup);
+                    const locMatch = selectedLocs.length === 0 || selectedLocs.includes(w.cityGroup);
                     if (!locMatch) return false;
 
                     // hodnocení
@@ -539,7 +547,7 @@
                 } else if (sortBy === 'priceDesc') {
                     filtered.sort((a, b) => b.price - a.price);
                 } else if (sortBy === 'name') {
-                    filtered.sort((a, b) => a.name.localeCompare(b.name));
+                    filtered.sort((a, b) => a.name.localeCompare(b.name, 'cs'));
                 }
 
                 renderWorkers(filtered);
@@ -564,7 +572,6 @@
                     const empty = 5 - fullStars - hasHalf;
                     for (let i = 0; i < empty; i++) stars += '<i class="far fa-star"></i>';
 
-                    // počáteční jména
                     const initial = w.name.split(' ').map(n => n[0]).join('').substring(0,2);
 
                     html += `
@@ -606,22 +613,30 @@
                 });
             }
 
-            // inicializace – zobraz vše
+            // Validace cenových intervalů
+            priceMin.addEventListener('change', function() {
+                let minVal = parseInt(priceMin.value) || 0;
+                let maxVal = parseInt(priceMax.value) || 99999;
+                if (minVal < 0) priceMin.value = 0;
+                if (minVal > maxVal) priceMin.value = maxVal;
+                filterWorkers();
+            });
+            
+            priceMax.addEventListener('change', function() {
+                let minVal = parseInt(priceMin.value) || 0;
+                let maxVal = parseInt(priceMax.value) || 99999;
+                if (maxVal > 2000) priceMax.value = 2000;
+                if (maxVal < minVal) priceMax.value = minVal;
+                filterWorkers();
+            });
+
+            // inicializace
             renderWorkers(workersData);
             bindFilters();
             updateActiveFilterCount();
-
-            // pro jistotu synchronizace min/max ceny
-            priceMin.addEventListener('change', function() {
-                if (parseInt(priceMin.value) < 0) priceMin.value = 0;
-                if (parseInt(priceMin.value) > parseInt(priceMax.value)) priceMax.value = priceMin.value;
-                filterWorkers();
-            });
-            priceMax.addEventListener('change', function() {
-                if (parseInt(priceMax.value) > 2000) priceMax.value = 2000;
-                if (parseInt(priceMax.value) < parseInt(priceMin.value)) priceMin.value = priceMax.value;
-                filterWorkers();
-            });
+            
+            // Počáteční spuštění filtrování pro aplikaci výchozích filtrů
+            filterWorkers();
         })();
     </script>
 </body>
